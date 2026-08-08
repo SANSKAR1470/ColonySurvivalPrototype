@@ -5,7 +5,8 @@ namespace ColonySurvival.Runtime
 {
     public class ColonyController : MonoBehaviour
     {
-        private ColonySimulation simulation;
+        private ColonySimulation colonySimulation;
+        public ColonySimulation ColonySimulation => colonySimulation;
 
         private float timer;
 
@@ -13,13 +14,12 @@ namespace ColonySurvival.Runtime
         {
             PopulationConfiguration population = JSONLoader.Load<PopulationConfiguration>("population.json");
             ConsumptionConfiguration consumption = JSONLoader.Load<ConsumptionConfiguration>("consumption.json");
-            simulation = new ColonySimulation(population, consumption);
-            Debug.Log("Colony simulation started.");
+            colonySimulation = new ColonySimulation(population, consumption);
         }
 
         private void Update()
         {
-            if (simulation == null)
+            if (colonySimulation == null)
             {
                 return;
             }
@@ -30,9 +30,7 @@ namespace ColonySurvival.Runtime
             {
                 timer -= 1f;
 
-                simulation.AdvanceDay();
-
-                Debug.Log($"Day {simulation.CurrentDay} | " + $"Food: {simulation.FoodStored} | " + $"Water: {simulation.WaterStored}");
+                colonySimulation.AdvanceDay();
             }
         }
     }
