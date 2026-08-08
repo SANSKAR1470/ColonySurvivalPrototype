@@ -2,26 +2,29 @@ using System;
 using System.IO;
 using UnityEngine;
 
-public class JSONLoader : MonoBehaviour
+namespace ColonySurvival.Runtime
 {
-    public static T Load<T>(string fileName)
+    public static class JSONLoader
     {
-        string path = Path.Combine(Application.streamingAssetsPath, fileName);
-
-        if (!File.Exists(path))
+        public static T Load<T>(string fileName)
         {
-            throw new FileNotFoundException($"JSON file not found: {path}");
+            string path = Path.Combine(Application.streamingAssetsPath, fileName);
+
+            if (!File.Exists(path))
+            {
+                throw new FileNotFoundException($"JSON file not found: {path}");
+            }
+
+            string json = File.ReadAllText(path);
+
+            T data = JsonUtility.FromJson<T>(json);
+
+            if (data == null)
+            {
+                throw new Exception($"Failed to deserialize JSON: {fileName}");
+            }
+
+            return data;
         }
-
-        string json = File.ReadAllText(path);
-
-        T data = JsonUtility.FromJson<T>(json);
-
-        if (data == null)
-        {
-            throw new Exception($"Failed to deserialize JSON: {fileName}");
-        }
-
-        return data;
     }
 }
